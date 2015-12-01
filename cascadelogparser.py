@@ -1,6 +1,12 @@
 import re
 
 class CascadeLogParser:
+	"""Parse a Cascade Server log and convert to JSON.
+
+	Attributes:
+		logFileName (str): Name of the log file. Usually "cascade.log"
+
+	"""
 	def __init__(self, logFileName):
 		self.logFileName = logFileName
 
@@ -55,6 +61,12 @@ class CascadeLogParser:
 		return infoMap
 
 	def parse(self, blob):
+		"""Parse the log file and return information as map.
+
+		Args:
+			blob (str): Contents of the log file.
+		"""
+
 		prevMap = None
 		for line in blob.splitlines():
 			if line[0].isdigit():
@@ -64,10 +76,16 @@ class CascadeLogParser:
 				prevMap = self._parseString(line)
 			else:
 				if prevMap is not None:
-					prevMap['message'] += line.replace('\t', ' ')
-						.replace('"', '\\"') + "<br />"
+					prevMap['message'] += \
+						line.replace('\t', ' ').replace('"', '\\"') + "<br />"
 
 	def createJSON(self, jsonFileName):
+		"""Create a JSON representation for the log.
+
+		Args:
+			jsonFileName (str): Output JSON file name.
+		"""
+		
 		logContent = ''
 
 		with open(self.logFileName, 'r') as log: 
